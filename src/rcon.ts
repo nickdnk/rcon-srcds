@@ -92,12 +92,16 @@ export class RCON {
                 host: this.host,
                 port: this.port
             }, () => {
-                if (this.connection) this.connection.removeListener('error', reject)
+                if (this.connection) {
+                    this.connection.removeListener('error', reject)
+                    this.connection.removeListener('timeout', reject)
+                }
                 this.connected = true
                 resolve()
             })
 
             this.connection.once('error', reject)
+            this.connection.once('timeout', reject)
             this.connection.setTimeout(this.timeout)
 
         })
